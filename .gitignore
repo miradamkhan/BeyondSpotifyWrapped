@@ -1,0 +1,13 @@
+# Secrets and tokens
+.env
+.cache*
+
+# Data — never commit personal listening history
+data/
+*.db
+*.sqlite3
+
+# Python
+.venv/
+__pycache__/
+*.pyc
