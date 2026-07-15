@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -123,6 +124,7 @@ def upsert_track(
     track: dict[str, Any],
     *,
     store_raw: bool = True,
+    replace_artists: bool = True,
 ) -> str | None:
     """Insert or update a track row from a Spotify track object.
 
@@ -188,7 +190,11 @@ def upsert_track(
         },
     )
 
-    _upsert_track_artists(connection, track_id, track.get("artists") or [])
+    artist_count = connection.execute(
+        "SELECT COUNT(*) FROM track_artists WHERE track_id = ?", (track_id,)
+    ).fetchone()[0]
+    if replace_artists or artist_count == 0:
+        _upsert_track_artists(connection, track_id, track.get("artists") or [])
     return track_id
 
 
@@ -200,7 +206,8 @@ def _upsert_track_artists(
     """Replace the ordered artist links for a track."""
     connection.execute("DELETE FROM track_artists WHERE track_id = ?", (track_id,))
     for order, artist in enumerate(artists):
-        artist_id = artist.get("id")
+        artist_name = artist.get("name") or ""
+        artist_id = artist.get("id") or _local_artist_id(artist_name)
         artist_name = artist.get("name") or ""
         if artist_id:
             _upsert_artist_stub(connection, artist)
@@ -222,7 +229,8 @@ def _upsert_artist_stub(
     Genres are not populated here (the current API tier omits them); a later
     enrichment step fills genres_json from a fallback source.
     """
-    artist_id = artist.get("id")
+    artist_name = artist.get("name") or ""
+    artist_id = artist.get("id") or _local_artist_id(artist_name)
     if not artist_id:
         return
     external_urls = artist.get("external_urls") or {}
@@ -238,11 +246,25 @@ def _upsert_artist_stub(
         """,
         {
             "id": artist_id,
-            "uri": artist.get("uri") or f"spotify:artist:{artist_id}",
-            "name": artist.get("name") or "",
+            "uri": artist.get("uri")
+            or (
+                artist_id
+                if artist_id.startswith("local:artist:")
+                else f"spotify:artist:{artist_id}"
+            ),
+            "name": artist_name,
             "spotify_url": external_urls.get("spotify"),
         },
     )
+
+
+def _local_artist_id(name: str) -> str | None:
+    """Create a stable local id for export-only artists with no Spotify artist id."""
+    normalized = " ".join(name.casefold().split())
+    if not normalized:
+        return None
+    digest = hashlib.sha1(normalized.encode("utf-8")).hexdigest()[:16]
+    return f"local:artist:{digest}"
 
 
 def insert_listen_event(
