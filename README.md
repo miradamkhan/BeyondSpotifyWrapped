@@ -21,10 +21,9 @@ Spotify permanently deprecated `audio-features` (energy / valence / danceability
 Add images under [`docs/screenshots/`](docs/screenshots/) then link them here:
 
 ```md
-![Overview dashboard](docs/screenshots/overview.png)
-![Genre timeline](docs/screenshots/timeline.png)
-![Clusters](docs/screenshots/clusters.png)
-![Moments](docs/screenshots/moments.png)
+![Overview dashboard](docs/screenshots/1.png)
+![Genre timeline](docs/screenshots/2.png)
+![Clusters](docs/screenshots/3.png)
 ```
 
 ## How open source works (important)
