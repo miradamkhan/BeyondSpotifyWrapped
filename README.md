@@ -20,8 +20,6 @@ It turns years of listens into:
 
 Spotify permanently deprecated `audio-features` (energy / valence / danceability, etc.). This project substitutes **track / artist / genre metadata embeddings** and MusicBrainz tags—still useful for clustering and “sounds like,” without relying on dead endpoints.
 
-> **Implementation note:** The original design mentioned sentence-transformers, Chroma, UMAP, and `ruptures`. The working stack uses TF‑IDF + SVD embeddings, NumPy nearest-neighbor retrieval, PCA for 2D plots, and a lightweight multivariate change detector (cleaner installs on newer Python / Windows). Behavior matches the milestone goals.
-
 ## How open source works (important)
 
 This repo is meant to ship **code + anonymized sample data**, never **your** listening history or API secrets.
@@ -33,18 +31,6 @@ This repo is meant to ship **code + anonymized sample data**, never **your** lis
 | `sample_data/` fake listens | Spotify OAuth cache (`.cache-spotify`) |
 | Docs / scripts | Your real Extended Streaming History export |
 
-**What a stranger gets when they clone**
-
-1. They can run `python scripts/bootstrap_sample.py` and open the dashboard on **fake** music data—no Spotify account required.
-2. Or they plug in **their own** Spotify app + **their own** export and rebuild analytics locally.
-3. They never receive your database, tokens, or export ZIP unless you accidentally commit them.
-
-**Before you push publicly**
-
-1. Confirm secrets are untracked: `git status` should not list `.env`, `data/`, or `.cache-spotify`.
-2. Keep `my_spotify_data/` **outside** the repo (or ensure it stays gitignored).
-3. Rotate any Spotify client secret that was ever pasted into chat / screenshots.
-4. Drop screenshots that don’t show emails, keys, or uniquely identifying profile chrome.
 
 ## Quick start A — sample demo (no Spotify)
 
@@ -165,11 +151,6 @@ All routes except `/health` require header `X-API-Key`.
 | GET | `/taste-dna` | Profile summary |
 | POST | `/sync` | Manual recently-played sync |
 
-## Resume bullets (draft)
-
-- Built an AI-powered music identity platform using metadata embeddings, PCA/K-means clustering, and change-point detection to generate personalized narrative insights about listening behavior over time.
-- Designed a semantic retrieval layer for cross-era track similarity, and an LLM narrative pipeline (local Ollama) grounded in pre-computed statistical deltas rather than raw dumps—reducing generic “your taste evolved” output.
-- Shipped a FastAPI + React analytics dashboard after redesigning around Spotify’s `audio-features` deprecation.
 
 ## License
 
