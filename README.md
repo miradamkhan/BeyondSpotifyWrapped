@@ -10,22 +10,17 @@ It turns years of listens into:
 - grounded **LLM narratives** (local [Ollama](https://ollama.com), optional for the sample demo)
 - a glassmorphic **React dashboard** over a **FastAPI** backend
 
+![Overview dashboard](docs/screenshots/1.png)
+
+![Taste DNA](docs/screenshots/2.png)
+
+![Significant moments](docs/screenshots/3.png)
+
 ## Why this architecture
 
 Spotify permanently deprecated `audio-features` (energy / valence / danceability, etc.). This project substitutes **track / artist / genre metadata embeddings** and MusicBrainz tags—still useful for clustering and “sounds like,” without relying on dead endpoints.
 
 > **Implementation note:** The original design mentioned sentence-transformers, Chroma, UMAP, and `ruptures`. The working stack uses TF‑IDF + SVD embeddings, NumPy nearest-neighbor retrieval, PCA for 2D plots, and a lightweight multivariate change detector (cleaner installs on newer Python / Windows). Behavior matches the milestone goals.
-
-## Screenshots
-
-Add images under [`docs/screenshots/`](docs/screenshots/) then link them here:
-
-```md
-![Overview dashboard](docs/screenshots/overview.png)
-![Genre timeline](docs/screenshots/timeline.png)
-![Clusters](docs/screenshots/clusters.png)
-![Moments](docs/screenshots/moments.png)
-```
 
 ## How open source works (important)
 
