@@ -90,6 +90,76 @@ CREATE TABLE IF NOT EXISTS sync_state (
     value TEXT NOT NULL,
     updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS monthly_genre_mix (
+    month TEXT NOT NULL,
+    genre TEXT NOT NULL,
+    listen_ms INTEGER NOT NULL,
+    listen_events INTEGER NOT NULL,
+    percentage REAL NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (month, genre)
+);
+
+CREATE TABLE IF NOT EXISTS change_points (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    month TEXT NOT NULL,
+    score REAL NOT NULL,
+    before_summary_json TEXT NOT NULL,
+    after_summary_json TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS track_analysis (
+    track_id TEXT PRIMARY KEY,
+    text_representation TEXT NOT NULL,
+    cluster_id INTEGER,
+    x REAL,
+    y REAL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (track_id) REFERENCES tracks(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS significant_moments (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    month TEXT NOT NULL,
+    track_id TEXT NOT NULL,
+    play_count INTEGER NOT NULL,
+    total_ms INTEGER NOT NULL,
+    reason TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (month, track_id),
+    FOREIGN KEY (track_id) REFERENCES tracks(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS moment_neighbors (
+    moment_id INTEGER NOT NULL,
+    neighbor_track_id TEXT NOT NULL,
+    rank INTEGER NOT NULL,
+    similarity REAL NOT NULL,
+    PRIMARY KEY (moment_id, rank),
+    FOREIGN KEY (moment_id) REFERENCES significant_moments(id) ON DELETE CASCADE,
+    FOREIGN KEY (neighbor_track_id) REFERENCES tracks(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS narrative_jobs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    job_type TEXT NOT NULL,
+    source_key TEXT NOT NULL,
+    input_json TEXT NOT NULL,
+    prompt TEXT NOT NULL,
+    output_schema_json TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'pending'
+        CHECK (status IN ('pending', 'completed', 'failed')),
+    model TEXT,
+    response_json TEXT,
+    error TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    generated_at TEXT,
+    UNIQUE (job_type, source_key)
+);
 """
 
 

@@ -1,13 +1,36 @@
-# Secrets and tokens
+# Secrets and local credentials
 .env
+.env.*
+!.env.example
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
 .cache*
+.cache-spotify
 
-# Data — never commit personal listening history
+# Personal / generated listening data — never commit
 data/
 *.db
 *.sqlite3
+my_spotify_data/
+../my_spotify_data/
 
 # Python
 .venv/
+venv/
 __pycache__/
-*.pyc
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Node / frontend build
+frontend/node_modules/
+frontend/dist/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.sw?

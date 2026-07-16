@@ -1,0 +1,134 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Syne", sans-serif;
+  --font-body: "Figtree", sans-serif;
+  --color-ink: #e8f2ec;
+  --color-muted: #9bb0a3;
+  --color-accent: #3dd6a5;
+  --color-accent-deep: #1fa87a;
+  --color-warm: #ff8f5a;
+  --color-glass: rgb(232 242 236 / 0.08);
+  --color-glass-strong: rgb(232 242 236 / 0.14);
+  --color-line: rgb(232 242 236 / 0.14);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    margin: 0;
+    overflow: hidden;
+    font-family: var(--font-body);
+    color: var(--color-ink);
+    background:
+      radial-gradient(900px 500px at 8% 12%, rgb(61 214 165 / 0.22), transparent 55%),
+      radial-gradient(700px 480px at 92% 18%, rgb(255 143 90 / 0.16), transparent 50%),
+      radial-gradient(1000px 700px at 50% 100%, rgb(31 168 122 / 0.12), transparent 55%),
+      linear-gradient(145deg, #04110c 0%, #0a1f18 42%, #102820 100%);
+  }
+
+  ::selection {
+    background: rgb(61 214 165 / 0.35);
+  }
+
+  button,
+  a {
+    font: inherit;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .glass {
+    background: linear-gradient(
+      155deg,
+      rgb(232 242 236 / 0.14) 0%,
+      rgb(232 242 236 / 0.06) 100%
+    );
+    border: 1px solid rgb(232 242 236 / 0.14);
+    box-shadow:
+      0 10px 40px rgb(0 0 0 / 0.28),
+      inset 0 1px 0 rgb(255 255 255 / 0.08);
+    backdrop-filter: blur(22px) saturate(140%);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+  }
+
+  .glass-soft {
+    background: rgb(232 242 236 / 0.07);
+    border: 1px solid rgb(232 242 236 / 0.1);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .reveal {
+    animation: rise-in 650ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Atmospheric blob behind the shell */
+.atmosphere {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.atmosphere::before,
+.atmosphere::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(60px);
+  opacity: 0.55;
+}
+
+.atmosphere::before {
+  width: 420px;
+  height: 420px;
+  left: -80px;
+  top: 20%;
+  background: rgb(61 214 165 / 0.35);
+  animation: drift 14s ease-in-out infinite alternate;
+}
+
+.atmosphere::after {
+  width: 360px;
+  height: 360px;
+  right: -60px;
+  bottom: 10%;
+  background: rgb(255 143 90 / 0.28);
+  animation: drift 18s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes drift {
+  from {
+    transform: translateY(0) translateX(0);
+  }
+  to {
+    transform: translateY(-30px) translateX(20px);
+  }
+}
