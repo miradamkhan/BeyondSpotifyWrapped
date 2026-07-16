@@ -20,17 +20,6 @@ It turns years of listens into:
 
 Spotify permanently deprecated `audio-features` (energy / valence / danceability, etc.). This project substitutes **track / artist / genre metadata embeddings** and MusicBrainz tags—still useful for clustering and “sounds like,” without relying on dead endpoints.
 
-## How open source works (important)
-
-This repo is meant to ship **code + anonymized sample data**, never **your** listening history or API secrets.
-
-| Ships in git | Stays on your machine only |
-|---|---|
-| Python / React source | `.env`, `frontend/.env` |
-| `.env.example` placeholders | `data/*.sqlite3`, embeddings, plots |
-| `sample_data/` fake listens | Spotify OAuth cache (`.cache-spotify`) |
-| Docs / scripts | Your real Extended Streaming History export |
-
 
 ## Quick start A — sample demo (no Spotify)
 
