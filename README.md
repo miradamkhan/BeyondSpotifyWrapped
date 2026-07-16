@@ -1,6 +1,6 @@
 # Beyond Spotify Wrapped
 
-A personal music-identity analytics app built on your **full Spotify listening history**—not the limited Web API window, and not Spotify’s deprecated `audio-features`.
+A personal music-identity analytics app built on your **full Spotify listening history**, not the limited Web API window, and not Spotify’s deprecated `audio-features`.
 
 It turns years of listens into:
 
